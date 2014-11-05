@@ -7,7 +7,9 @@ object Mappings {
 
   val keepAttributesAndParameters =
     Seq("-keepattributes Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,*Annotation*,EnclosingMethod"
-      , "-keepparameternames")
+      , "-keepparameternames"
+      , "-adaptresourcefilenames    **.properties,**.gif,**.jpg,**.handlers,**.handler2s"
+      , "-adaptresourcefilecontents **.properties,**.handlers,**.handler2s,META-INF/MANIFEST.MF")
 
   def preshim(update: UpdateReport) = {
     Seq(update.select(module = moduleFilter(organization = "com.amazonaws")).map(f => s"-injars $f(!META-INF/MANIFEST.MF)").mkString("\n")) ++
