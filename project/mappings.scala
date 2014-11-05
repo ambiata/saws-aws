@@ -17,7 +17,7 @@ object Mappings {
       , "-keep class com.amazonaws.** { *; }"
       , "-keepclassmembers class com.amazonaws.** { *; }"
       , "-libraryjars <java.home>/lib/rt.jar") ++
-    Seq(update.select(module = moduleFilter(organization = "com.amazonaws")).map(f => s"-libraryjars $f(!META-INF/MANIFEST.MF)").mkString("\n")) ++
+    Seq(update.select().map(f => s"-libraryjars $f(!META-INF/MANIFEST.MF)").mkString("\n")) ++
     Seq("-outjars empty.jar") ++
     dont
   }
@@ -34,7 +34,7 @@ object Mappings {
       , "-keepclassmembers class com.amazonaws.** { *; }"
       , "-applymapping aws.map"
       , "-libraryjars <java.home>/lib/rt.jar") ++
-    Seq(update.select(module = moduleFilter(organization = "com.amazonaws")).map(f => s"-libraryjars $f(!META-INF/MANIFEST.MF)").mkString("\n")) ++
+    Seq(update.select().map(f => s"-libraryjars $f(!META-INF/MANIFEST.MF)").mkString("\n")) ++
     Seq(s"-outjars ${name}-proguard-${version}.jar") ++
     dont
   }
