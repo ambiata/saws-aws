@@ -1,5 +1,3 @@
 #!/bin/sh
 
-source $(dirname $0)/config
-
 ./sbt -Dsbt.log.noformat=true "; clean; proguard:proguard; publish;  echo-version"
