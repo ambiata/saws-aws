@@ -12,7 +12,6 @@ object build extends Build {
     id = "saws-aws",
     base = file("."),
     settings = Defaults.coreDefaultSettings ++
-      Seq(resolvers ++= resolversx) ++
       proguardSettings ++
       Seq[Settings](libraryDependencies ++= awsDependency) ++
       inConfig(ProguardPre)(ProguardSettings.default ++ dependenciesPre ++ Seq(managedClasspath <<= (managedClasspath, managedClasspath in Compile).map({ case (y, x) => y ++ x}))) ++
@@ -26,7 +25,8 @@ object build extends Build {
             case(_, n, v, u, b) => Mappings.shim(n, v, u, b)
         })
         , javaOptions in (Proguard, ProguardKeys.proguard) := Seq("-Xmx2G")) ++
-        Seq[Settings](publishArtifact in (Compile, packageBin) := false) ++
+      promulgate.library("com.ambiata.aws", "ambiata-oss") ++
+      Seq[Settings](publishArtifact in (Compile, packageBin) := false) ++
       addArtifact(name.apply(n => Artifact(s"$n", "jar", "jar")), (ProguardKeys.proguard in Proguard, packageBin in Compile, name, version).map({ case (_, s, n, v) => s.getParentFile / "proguard" / s"$n-proguard-$v.jar"}))
   )
 
@@ -43,14 +43,4 @@ object build extends Build {
       "com.amazonaws"       %  "aws-java-sdk" % "1.9.0" exclude("joda-time", "joda-time") // This is declared with a wildcard
     , "com.owtelse.codec"   %  "base64"       % "1.0.6"
     , "javax.mail"          %  "mail"         % "1.4.7")
-
-  val resolversx = Seq(
-      Resolver.sonatypeRepo("releases")
-    , Resolver.typesafeRepo("releases")
-    , "cloudera"              at "https://repository.cloudera.com/content/repositories/releases"
-    , Resolver.url("ambiata-oss", new URL("https://ambiata-oss.s3.amazonaws.com"))(Resolver.ivyStylePatterns)
-    , "Scalaz Bintray Repo"   at "http://dl.bintray.com/scalaz/releases"
-    // For 2.11 version of scala-ssh only
-    , "spray.io"              at "http://repo.spray.io")
-
 }
