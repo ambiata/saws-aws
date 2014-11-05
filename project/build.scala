@@ -12,19 +12,21 @@ object build extends Build {
     id = "saws-aws",
     base = file("."),
     settings = Defaults.coreDefaultSettings ++
-      projectSettings ++
-      promulgate.library("com.ambiata.aws", "ambiata-oss") ++
       Seq(resolvers ++= resolversx) ++
       proguardSettings ++
       Seq[Settings](libraryDependencies ++= awsDependency) ++
       inConfig(ProguardPre)(ProguardSettings.default ++ dependenciesPre ++ Seq(managedClasspath <<= (managedClasspath, managedClasspath in Compile).map({ case (y, x) => y ++ x}))) ++
       dependenciesPre ++
       Seq[Settings](name := "saws-aws"
+        , version in ThisBuild := "1.2.1"
+        , organization := "com.ambiata"
+        , scalaVersion := "2.11.2"
         , ProguardKeys.options in ProguardPre <<= (update, packageBin in Compile).map({ case (u, _) => Mappings.preshim(u) })
         , ProguardKeys.options in Proguard <<= (ProguardKeys.proguard in ProguardPre, name, version, update, packageBin in Compile).map({
             case(_, n, v, u, b) => Mappings.shim(n, v, u, b)
         })
         , javaOptions in (Proguard, ProguardKeys.proguard) := Seq("-Xmx2G")) ++
+        Seq[Settings](publishArtifact in (Compile, packageBin) := false) ++
       addArtifact(name.apply(n => Artifact(s"$n", "jar", "jar")), (ProguardKeys.proguard in Proguard, packageBin in Compile, name, version).map({ case (_, s, n, v) => s.getParentFile / "proguard" / s"$n-proguard-$v.jar"}))
   )
 
@@ -35,13 +37,6 @@ object build extends Build {
     libraryDependencies <+= (ProguardKeys.proguardVersion in ProguardPre) { version =>
       "net.sf.proguard" % "proguard-base" % version % ProguardPre.name
     }
-  )
-
-  lazy val projectSettings: Seq[Settings] = Seq(
-      name := "aws"
-    , version in ThisBuild := "1.2.1"
-    , organization := "com.ambiata"
-    , scalaVersion := "2.11.2"
   )
 
   val awsDependency = Seq(
