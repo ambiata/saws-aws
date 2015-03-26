@@ -8,7 +8,7 @@ object Mappings {
   val keepAttributesAndParameters =
     Seq("-keepattributes Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,*Annotation*,EnclosingMethod"
       , "-keepparameternames"
-      , "-adaptresourcefilenames    **.properties,**.gif,**.jpg,**.handlers,**.handler2s"
+      , "-adaptresourcefilenames    **.properties,**.gif,**.jpg"
       , "-adaptresourcefilecontents **.properties,**.handlers,**.handler2s,META-INF/MANIFEST.MF")
 
   def preshim(update: UpdateReport) = {
