@@ -24,7 +24,7 @@ object build extends Build {
         , ProguardKeys.options in Proguard <<= (ProguardKeys.proguard in ProguardPre, name, version, update, packageBin in Compile).map({
             case(_, n, v, u, b) => Mappings.shim(n, v, u, b)
         })
-        , javaOptions in (Proguard, ProguardKeys.proguard) := Seq("-Xmx2G")) ++
+        , javaOptions in (Proguard, ProguardKeys.proguard) := Seq("-Xmx3G")) ++
       promulgate.library("com.ambiata.aws", "ambiata-oss") ++
       Seq[Settings](publishArtifact in (Compile, packageBin) := false) ++
       addArtifact(name.apply(n => Artifact(s"$n", "jar", "jar")), (ProguardKeys.proguard in Proguard, packageBin in Compile, name, version).map({ case (_, s, n, v) => s.getParentFile / "proguard" / s"$n-proguard-$v.jar"}))
