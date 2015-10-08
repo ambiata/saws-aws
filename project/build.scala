@@ -24,7 +24,7 @@ object build extends Build {
         , ProguardKeys.options in Proguard <<= (ProguardKeys.proguard in ProguardPre, name, version, update, packageBin in Compile).map({
             case(_, n, v, u, b) => Mappings.shim(n, v, u, b)
         })
-        , javaOptions in (Proguard, ProguardKeys.proguard) := Seq("-Xmx3G")) ++
+        , javaOptions in (Proguard, ProguardKeys.proguard) := Seq("-Xmx2G")) ++
       promulgate.library("com.ambiata.aws", "ambiata-oss") ++
       Seq[Settings](publishArtifact in (Compile, packageBin) := false) ++
       addArtifact(name.apply(n => Artifact(s"$n", "jar", "jar")), (ProguardKeys.proguard in Proguard, packageBin in Compile, name, version).map({ case (_, s, n, v) => s.getParentFile / "proguard" / s"$n-proguard-$v.jar"}))
@@ -40,7 +40,7 @@ object build extends Build {
   )
 
   val awsDependency = Seq(
-      "com.amazonaws"       %  "aws-java-sdk" % "1.10.24" exclude("joda-time", "joda-time") // This is declared with a wildcard
+      "com.amazonaws"       %  "aws-java-sdk" % "1.9.0" exclude("joda-time", "joda-time") // This is declared with a wildcard
     , "com.owtelse.codec"   %  "base64"       % "1.0.6"
     , "javax.mail"          %  "mail"         % "1.4.7")
 }
