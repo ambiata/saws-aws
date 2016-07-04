@@ -8,6 +8,9 @@ import com.typesafe.sbt.SbtProguard._
 object build extends Build {
   type Settings = Def.Setting[_]
 
+  lazy val ossBucket: String =
+    sys.env.getOrElse("AMBIATA_IVY_OSS", "ambiata-oss")
+
   lazy val aws = Project(
     id = "saws-aws",
     base = file("."),
@@ -27,7 +30,7 @@ object build extends Build {
         , javaOptions in (ProguardPre, ProguardKeys.proguard) := Seq("-Xmx2G")
         , javaOptions in (Proguard, ProguardKeys.proguard) := Seq("-Xmx2G")
         ) ++
-      promulgate.library("com.ambiata.aws", "ambiata-oss") ++
+      promulgate.library("com.ambiata.aws", ossBucket) ++
       Seq[Settings](publishArtifact in (Compile, packageBin) := false) ++
       addArtifact(name.apply(n => Artifact(s"$n", "jar", "jar")), (ProguardKeys.proguard in Proguard, packageBin in Compile, name, version).map({ case (_, s, n, v) => s.getParentFile / "proguard" / s"$n-proguard-$v.jar"}))
   )
